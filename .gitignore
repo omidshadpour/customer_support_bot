@@ -1,0 +1,10 @@
+.env
+chroma_db/
+uploads/
+logs/
+models/
+database/
+__pycache__/
+*.pyc
+.venv/
+venv/

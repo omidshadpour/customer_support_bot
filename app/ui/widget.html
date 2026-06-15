@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Support</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+
+        body {
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            width: 400px;
+            height: 600px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* ---- Header ---- */
+        .chat-header {
+            background: #534AB7;
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #AFA9EC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .avatar i { font-size: 20px; color: #26215C; }
+
+        .header-info { flex: 1; }
+        .header-info h3 { font-size: 14px; font-weight: 600; color: #EEEDFE; }
+        .header-info p { font-size: 12px; color: #AFA9EC; margin-top: 2px; }
+
+        .status { display: flex; align-items: center; gap: 6px; }
+        .status-dot { width: 8px; height: 8px; background: #5DCAA5; border-radius: 50%; }
+        .status span { font-size: 12px; color: #AFA9EC; }
+
+        /* ---- Messages ---- */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            scroll-behavior: smooth;
+        }
+
+        .chat-messages::-webkit-scrollbar { width: 4px; }
+        .chat-messages::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 2px; }
+
+        .welcome-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            gap: 10px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .welcome-message i { font-size: 36px; color: #7F77DD; }
+        .welcome-message p { font-size: 13px; color: #9ca3af; line-height: 1.6; }
+
+        .message {
+            max-width: 78%;
+            padding: 9px 13px;
+            border-radius: 14px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .message.user {
+            background: #534AB7;
+            color: #EEEDFE;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.bot {
+            background: #f3f4f6;
+            color: #1f2937;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* ---- Suggestions ---- */
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 0 16px 10px;
+        }
+
+        .suggestion {
+            font-size: 12px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid #7F77DD;
+            color: #534AB7;
+            background: #EEEDFE;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .suggestion:hover { background: #CECBF6; }
+
+        /* ---- Typing ---- */
+        .typing {
+            display: flex;
+            gap: 5px;
+            padding: 10px 14px;
+            background: #f3f4f6;
+            border-radius: 14px;
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+            width: fit-content;
+            border: 1px solid #e5e7eb;
+        }
+
+        .typing span {
+            width: 7px;
+            height: 7px;
+            background: #7F77DD;
+            border-radius: 50%;
+            animation: bounce 1.2s infinite;
+        }
+
+        .typing span:nth-child(2) { animation-delay: 0.2s; }
+        .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* ---- Input ---- */
+        .chat-input {
+            padding: 12px 14px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 9px 14px;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            outline: none;
+            font-size: 13px;
+            background: #f9fafb;
+            color: #1f2937;
+        }
+
+        .chat-input input:focus { border-color: #7F77DD; background: white; }
+
+        .send-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #534AB7;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.15s;
+        }
+
+        .send-btn:hover { background: #3C3489; }
+        .send-btn i { font-size: 16px; color: #EEEDFE; }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+
+    <!-- Header -->
+    <div class="chat-header">
+        <div class="avatar">
+            <i class="ti ti-robot"></i>
+        </div>
+        <div class="header-info">
+            <h3>Support Assistant</h3>
+            <p>Powered by AI</p>
+        </div>
+        <div class="status">
+            <div class="status-dot"></div>
+            <span>Online</span>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="chat-messages" id="messages">
+        <div class="welcome-message" id="welcome">
+            <i class="ti ti-message-circle"></i>
+            <p>Hi there! I'm your AI support assistant.<br>Ask me anything about our products or services.</p>
+        </div>
+    </div>
+
+    <!-- Suggestions -->
+    <div class="suggestions" id="suggestions">
+        <div class="suggestion" onclick="quickAsk(this)">What are your hours?</div>
+        <div class="suggestion" onclick="quickAsk(this)">Return policy</div>
+        <div class="suggestion" onclick="quickAsk(this)">Track my order</div>
+    </div>
+
+    <!-- Input -->
+    <div class="chat-input">
+        <input
+            type="text"
+            id="userInput"
+            placeholder="Type your message..."
+            onkeypress="if(event.key==='Enter') sendMessage()"
+        >
+        <button class="send-btn" onclick="sendMessage()">
+            <i class="ti ti-send"></i>
+        </button>
+    </div>
+
+</div>
+
+<script>
+    const COMPANY_ID = "{{COMPANY_ID}}";
+    const API_URL = "";
+    const SESSION_ID = Math.random().toString(36).substring(2);
+
+    function removeWelcome() {
+        const w = document.getElementById("welcome");
+        if (w) w.remove();
+        const s = document.getElementById("suggestions");
+        if (s) s.remove();
+    }
+
+    function addMessage(content, role) {
+        removeWelcome();
+        const messagesDiv = document.getElementById("messages");
+        const div = document.createElement("div");
+        div.className = `message ${role}`;
+        div.textContent = content;
+        messagesDiv.appendChild(div);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        return div;
+    }
+
+    function showTyping() {
+        removeWelcome();
+        const messagesDiv = document.getElementById("messages");
+        const div = document.createElement("div");
+        div.className = "typing";
+        div.id = "typing";
+        div.innerHTML = "<span></span><span></span><span></span>";
+        messagesDiv.appendChild(div);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function hideTyping() {
+        const t = document.getElementById("typing");
+        if (t) t.remove();
+    }
+
+    function quickAsk(el) {
+        document.getElementById("userInput").value = el.textContent;
+        sendMessage();
+    }
+
+    async function sendMessage() {
+        const input = document.getElementById("userInput");
+        const question = input.value.trim();
+        if (!question) return;
+        input.value = "";
+        addMessage(question, "user");
+        showTyping();
+
+        try {
+            const response = await fetch(`${API_URL}/chat/ask-stream`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    question: question,
+                    company_id: COMPANY_ID,
+                    session_id: SESSION_ID
+                })
+            });
+
+            hideTyping();
+
+            if (!response.ok) {
+                addMessage("Sorry, something went wrong. Please try again.", "bot");
+                return;
+            }
+
+            const botMessage = addMessage("", "bot");
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                botMessage.textContent += decoder.decode(value);
+                const messagesDiv = document.getElementById("messages");
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }
+
+        } catch (error) {
+            hideTyping();
+            addMessage("Sorry, I could not connect to the server.", "bot");
+            console.error("Error:", error);
+        }
+    }
+</script>
+
+</body>
+</html>
