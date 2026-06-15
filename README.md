@@ -3,7 +3,7 @@
 An AI-powered customer support chatbot that businesses can embed on their website. Upload your FAQ and policy documents, and let AI handle customer questions 24/7.
 
 ## 🚀 Live Demo
-[Admin Panel](https://your-streamlit-url.streamlit.app)
+[Admin Panel](http://localhost:8501/)
 
 ## 🏗️ Architecture
 
