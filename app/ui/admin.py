@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import uuid
 
-API_URL = "http://127.0.0.1:8000"
+API_URL = "https://om1d-customer-support-backend.hf.space"
 
 st.set_page_config(
     page_title="Customer Support Admin",
