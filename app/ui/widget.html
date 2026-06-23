@@ -248,7 +248,8 @@
 </div>
 
 <script>
-    const COMPANY_ID = "{{COMPANY_ID}}";
+    const urlParams = new URLSearchParams(window.location.search);
+    const COMPANY_ID = urlParams.get('company') || "test";
     const API_URL = "https://om1d-customer-support-backend.hf.space";
     const SESSION_ID = Math.random().toString(36).substring(2);
 
